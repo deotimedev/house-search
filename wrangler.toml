@@ -1,0 +1,5 @@
+# TODO rest of this i guess
+
+[[vectorize]]
+binding = "VECTORIZE_INDEX" # available within your Worker on env.VECTORIZE_INDEX
+index_name = "transcripts-index"
