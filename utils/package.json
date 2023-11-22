@@ -1,0 +1,12 @@
+{
+  "name": "@house-search/utils",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@types/node": "^20.9.3"
+  }
+}

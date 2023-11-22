@@ -1,6 +1,7 @@
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 import {Ai} from "@cloudflare/ai";
+import {VectorizeIndex} from "@cloudflare/workers-types"
 
 declare global {
 	namespace App {
@@ -10,6 +11,8 @@ declare global {
 		// interface Platform {}
 		interface Platform {
 			env?: {
+				CLOUDFLARE_ACCOUNT_ID: string,
+				CLOUDFLARE_API_KEY: string,
 				AI: Ai,
 				VECTORIZE_INDEX: VectorizeIndex
 			}
