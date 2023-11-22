@@ -3,10 +3,10 @@ import * as cheerio from "cheerio";
 import * as fs from "fs/promises";
 // @ts-ignore
 import path from "path";
-import TagElement = cheerio.TagElement;
 import * as utils from "@house-search/utils"
 import {PathLike} from "fs";
 import {Entry} from "./model";
+import TagElement = cheerio.TagElement;
 
 async function checkExists(path: PathLike): Promise<boolean> {
     return fs.access(path)
@@ -31,7 +31,7 @@ async function indexEpisode(season: number, episode: number, link: string) {
     const transcript = lines.join("\n")
     console.log(`${episode}: ${lines[0]}`)
     const dir = path.join(__dirname, constants.index, `${season}`)
-    if (!await checkExists(dir)) await fs.mkdir(dir, { recursive: true })
+    if (!await checkExists(dir)) await fs.mkdir(dir, {recursive: true})
     const p = path.join(dir, `${episode}`)
     await fs.writeFile(p, transcript)
 }
@@ -52,43 +52,48 @@ async function indexSeason(season: number, data: cheerio.TagElement) {
 async function exportIndexesToVectors() {
     const indexes = path.join(__dirname, constants.index)
     const vectors = path.join(__dirname, constants.vectors)
-    await fs.writeFile(vectors, "");
     const numerical = (a: string, b: string) => Number(a) - Number(b)
-    let i = 1
+    const entries: Entry[] = []
     for (const season of (await fs.readdir(indexes)).sort(numerical)) {
         for (const episode of (await fs.readdir(path.join(indexes, season))).sort(numerical)) {
             const lines = (await fs.readFile(path.join(indexes, season, episode))).toString().split("\n")
             let context: string | undefined = undefined
-            let previous: number | undefined = undefined
+            let i = 0
             for (const line of lines) {
-                if (i > 50) break
                 if (line.includes("[") && line.includes("]")) {
                     context = line
                     continue
                 }
-                const embedding = await utils.ai.createEmbedding(line, {
-                    cloudflareAccountId: process.env.CLOUDFLARE_ACCOUNT_ID!,
-                    cloudflareApiKey: process.env.CLOUDFLARE_API_KEY!
-                })
+
                 const character = line.split(":")[0] ?? "Unknown"
                 const entry: Entry = {
                     text: line,
                     character,
-                    responseTo: previous,
+                    responseTo: i == 0 ? undefined : entries.length,
                     context
                 }
-                const data = JSON.stringify({
-                    id: `${i}`,
-                    values: embedding,
-                    metadata: entry
-                })
-                const str = i === 1 ? data : `\n${data}`
-                await fs.appendFile(vectors, str)
-                previous = i
+                entries.push(entry)
                 i++
             }
         }
     }
+    const data: string[] = []
+    let id = 1
+    for (const chunk of utils.chunked(entries, constants.embeddingBatchSize)) {
+        const embeddings = await utils.ai.createEmbedding(chunk.map(e => e.text), {
+            cloudflareAccountId: process.env.CLOUDFLARE_ACCOUNT_ID!,
+            cloudflareApiKey: process.env.CLOUDFLARE_API_KEY!
+        })
+        data.push(...utils.zip(chunk, embeddings)
+            .map(([entry, values], i) => JSON.stringify({
+                id: `${id + i}`,
+                values,
+                metadata: entry
+            })))
+        id += chunk.length
+        if (id > 300) break
+    }
+    await fs.writeFile(vectors, data.join("\n"))
 }
 
 async function main() {

@@ -2,6 +2,7 @@ export default {
     index: "../index/",
     webIndex: "https://clinic-duty.livejournal.com/12225.html",
     vectors: "../vectors.ndjson",
+    embeddingBatchSize: 100, // arbitrary? i couldnt find an exact number but 200 breaks for some reason
     excludedStartingLines: [
         "transcribed",
         "disclaimer",
