@@ -14,7 +14,9 @@ export async function load(req: RequestEvent): Promise<{ result: string }> {
     const result = (await env.VECTORIZE_INDEX.query(embedding, {
         topK: 1
     })).matches[0]
+    if (!result) return {result: "Could not find any matches."}
+    const metadata = (await env.VECTORIZE_INDEX.getByIds([result.vectorId]))[0].metadata
     return {
-        result: JSON.stringify(result)
+        result: JSON.stringify(metadata)
     }
 }

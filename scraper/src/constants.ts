@@ -1,6 +1,7 @@
 export default {
     index: "../index/",
     webIndex: "https://clinic-duty.livejournal.com/12225.html",
+    vectors: "../vectors.ndjson",
     excludedStartingLines: [
         "transcribed",
         "disclaimer",

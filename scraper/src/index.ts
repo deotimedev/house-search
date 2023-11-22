@@ -5,6 +5,14 @@ import * as fs from "fs/promises";
 import path from "path";
 import TagElement = cheerio.TagElement;
 import * as utils from "@house-search/utils"
+import {PathLike} from "fs";
+import {Entry} from "./model";
+
+async function checkExists(path: PathLike): Promise<boolean> {
+    return fs.access(path)
+        .then(() => true)
+        .catch(() => false)
+}
 
 async function indexEpisode(season: number, episode: number, link: string) {
     const page = await fetch(link)
@@ -23,7 +31,7 @@ async function indexEpisode(season: number, episode: number, link: string) {
     const transcript = lines.join("\n")
     console.log(`${episode}: ${lines[0]}`)
     const dir = path.join(__dirname, constants.index, `${season}`)
-    if (!await utils.checkExists(dir)) await fs.mkdir(dir, { recursive: true })
+    if (!await checkExists(dir)) await fs.mkdir(dir, { recursive: true })
     const p = path.join(dir, `${episode}`)
     await fs.writeFile(p, transcript)
 }
@@ -41,9 +49,54 @@ async function indexSeason(season: number, data: cheerio.TagElement) {
     console.log("-----------------------------")
 }
 
+async function exportIndexesToVectors() {
+    const indexes = path.join(__dirname, constants.index)
+    const vectors = path.join(__dirname, constants.vectors)
+    await fs.writeFile(vectors, "");
+    const numerical = (a: string, b: string) => Number(a) - Number(b)
+    let i = 1
+    for (const season of (await fs.readdir(indexes)).sort(numerical)) {
+        for (const episode of (await fs.readdir(path.join(indexes, season))).sort(numerical)) {
+            const lines = (await fs.readFile(path.join(indexes, season, episode))).toString().split("\n")
+            let context: string | undefined = undefined
+            let previous: number | undefined = undefined
+            for (const line of lines) {
+                if (i > 50) break
+                if (line.includes("[") && line.includes("]")) {
+                    context = line
+                    continue
+                }
+                const embedding = await utils.ai.createEmbedding(line, {
+                    cloudflareAccountId: process.env.CLOUDFLARE_ACCOUNT_ID!,
+                    cloudflareApiKey: process.env.CLOUDFLARE_API_KEY!
+                })
+                const character = line.split(":")[0] ?? "Unknown"
+                const entry: Entry = {
+                    text: line,
+                    character,
+                    responseTo: previous,
+                    context
+                }
+                const data = JSON.stringify({
+                    id: `${i}`,
+                    values: embedding,
+                    metadata: entry
+                })
+                const str = i === 1 ? data : `\n${data}`
+                await fs.appendFile(vectors, str)
+                previous = i
+                i++
+            }
+        }
+    }
+}
+
 async function main() {
 
-    if (!await utils.checkExists(path.join(__dirname, constants.index))) {
+    await exportIndexesToVectors()
+    return
+    if (!await checkExists(path.join(__dirname, constants.index))) {
+        console.log("Building indexes...")
         const page = await fetch(constants.webIndex)
         const $ = cheerio.load(await page.text())
         $(constants.selectors.seasons)
@@ -51,6 +104,7 @@ async function main() {
             .slice(0, -1)
             .map((e, i) => indexSeason(i + 1, e as TagElement))
     }
+
 
 }
 
