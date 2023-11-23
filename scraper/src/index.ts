@@ -6,6 +6,9 @@ import path from "path";
 import * as utils from "@house-search/utils"
 import {PathLike} from "fs";
 import {Entry} from "./model";
+import * as progress from "cli-progress"
+// @ts-ignore
+import chalk from "chalk"
 import TagElement = cheerio.TagElement;
 
 async function checkExists(path: PathLike): Promise<boolean> {
@@ -49,11 +52,27 @@ async function indexSeason(season: number, data: cheerio.TagElement) {
     console.log("-----------------------------")
 }
 
-async function exportIndexesToVectors() {
+function createBar(
+    name: string,
+    total: number
+): progress.Bar {
+    const bar = new progress.Bar({
+        format: `${chalk.green.bold(name)} | ${chalk.blue("{bar}")} | {percentage}% || {value}/{total} completed | ETA: {eta}s`,
+        barCompleteChar: '\u2588',
+        barIncompleteChar: '\u2591',
+        hideCursor: true
+    })
+    bar.start(total, 0)
+    return bar
+}
+
+async function exportIndexesToVectors(amount: number) {
     const indexes = path.join(__dirname, constants.index)
     const vectors = path.join(__dirname, constants.vectors)
     const numerical = (a: string, b: string) => Number(a) - Number(b)
     const entries: Entry[] = []
+    const lineCount = 68295 // i just know
+    const parseBar = createBar("Parsing Indexes", lineCount)
     for (const season of (await fs.readdir(indexes)).sort(numerical)) {
         for (const episode of (await fs.readdir(path.join(indexes, season))).sort(numerical)) {
             const lines = (await fs.readFile(path.join(indexes, season, episode))).toString().split("\n")
@@ -69,16 +88,19 @@ async function exportIndexesToVectors() {
                 const entry: Entry = {
                     text: line,
                     character,
-                    responseTo: i == 0 ? undefined : entries.length,
+                    responseTo: i == 0 ? undefined : entries.length - 1,
                     context
                 }
                 entries.push(entry)
                 i++
+                parseBar.increment()
             }
         }
     }
+    parseBar.stop()
+    const embedBar = createBar("Creating Vectors", amount)
     const data: string[] = []
-    let id = 1
+    let id = 0
     for (const chunk of utils.chunked(entries, constants.embeddingBatchSize)) {
         const embeddings = await utils.ai.createEmbedding(chunk.map(e => e.text), {
             cloudflareAccountId: process.env.CLOUDFLARE_ACCOUNT_ID!,
@@ -91,17 +113,17 @@ async function exportIndexesToVectors() {
                 metadata: entry
             })))
         id += chunk.length
-        if (id > 300) break
+        embedBar.update(id)
+        if (id >= amount) break
     }
+    embedBar.stop()
     await fs.writeFile(vectors, data.join("\n"))
 }
 
 async function main() {
 
-    await exportIndexesToVectors()
-    return
     if (!await checkExists(path.join(__dirname, constants.index))) {
-        console.log("Building indexes...")
+        console.log("Indexes not already made, making them now...")
         const page = await fetch(constants.webIndex)
         const $ = cheerio.load(await page.text())
         $(constants.selectors.seasons)
@@ -109,7 +131,7 @@ async function main() {
             .slice(0, -1)
             .map((e, i) => indexSeason(i + 1, e as TagElement))
     }
-
+    await exportIndexesToVectors(1000)
 
 }
 
