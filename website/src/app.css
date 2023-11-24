@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: "HouseMDFont";
+    src: url("../static/house-font.ttf");
+    font-weight: normal;
+    font-style: normal;
+}
