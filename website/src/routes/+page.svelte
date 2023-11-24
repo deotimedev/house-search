@@ -1,15 +1,20 @@
 <script lang="ts">
     import type {VectorizeInfo} from "./+page.server";
     import Title from "$lib/components/Title.svelte";
+    import {fly} from "svelte/transition"
+    import {onMount} from "svelte";
+    import Search from "$lib/components/Search.svelte";
 
-    export let data: VectorizeInfo
+    // export let data: VectorizeInfo
+
+    let ready = false
+    onMount(() => ready = true)
 </script>
-<Title />
-<form action="./search">
-    <label for="search">Query:</label>
-    <input id="search" name="q" type="search" placeholder="Enter search" required>
-</form>
-<br>
-<!--<form action="./nuke">-->
-<!--    <button type="submit">CLICK TO NUKE VECTORS!!!</button>-->
-<!--</form>-->
+
+
+{#if ready}
+    <div transition:fly={{ y: 100, duration: 1000 }} class="flex flex-col items-center space-y-5 pt-52" style="height: 100%">
+        <Title/>
+        <Search/>
+    </div>
+{/if}
