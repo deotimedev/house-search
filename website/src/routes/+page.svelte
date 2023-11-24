@@ -30,8 +30,10 @@
             {#await results}
                 <SyncLoader size="60" color="#FFFFFF" unit="px" duration="0.5s"/>
             {:then results}
-                {#each results as result}
-                    <Entry />
+                {#each results as result, i}
+                    <div in:fly|global={{ y: 150, duration: 1000, delay: (i * 100) }} class="min-w-[100%] flex items-center flex-col">
+                        <Entry />
+                    </div>
                 {/each}
             {/await}
         {/if}
