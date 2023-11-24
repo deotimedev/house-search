@@ -4,7 +4,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        "house": ["HouseMDFont"]
+        "house": ["HouseMDFont"],
+        "sans": ["Poppins"]
       }
     },
   },
