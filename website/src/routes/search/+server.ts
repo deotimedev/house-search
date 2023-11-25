@@ -2,7 +2,7 @@ import type {RequestEvent} from "@sveltejs/kit";
 import {error} from "@sveltejs/kit";
 import * as utils from "@house-search/utils"
 
-export async function load(req: RequestEvent): Promise<{ result: string }> {
+export async function GET(req: RequestEvent) {
     const env = req.platform?.env
     if (!env) throw error(500, "Environment is not set up.")
     const search = req.url.searchParams.get("q")
@@ -16,7 +16,7 @@ export async function load(req: RequestEvent): Promise<{ result: string }> {
     })).matches[0]
     if (!result) return {result: "Could not find any matches."}
     const metadata = (await env.VECTORIZE_INDEX.getByIds([result.vectorId]))[0].metadata
-    return {
+    return Response.json({
         result: JSON.stringify(metadata)
-    }
+    })
 }

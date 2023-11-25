@@ -2,7 +2,7 @@
   "name": "house-search",
   "workspaces": ["website", "scraper", "utils"],
   "scripts": {
-    "scrape": "ts-node scraper/src/index.ts",
+    "scrape": "cd scraper && ts-node src/index.ts && cd ../",
     "website": "cd website && wrangler dev --remote && cd ../",
     "upload-vectors": "wrangler vectorize insert transcripts-index --file=scraper/vectors.ndjson"
   }
