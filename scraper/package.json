@@ -12,6 +12,7 @@
   "devDependencies": {
     "@types/cheerio": "^0.22.34",
     "@types/cli-progress": "^3.11.5",
+    "@types/inquirer": "^9.0.7",
     "@types/node": "^20.9.2",
     "typescript": "^5.2.2"
   },
