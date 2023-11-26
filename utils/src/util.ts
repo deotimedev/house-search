@@ -11,3 +11,11 @@ export function chunked<T>(array: T[], size: number) {
     }
     return chunks;
 }
+
+export function isUppercase(str: string) {
+    return str.toUpperCase() === str && str !== str.toLowerCase()
+}
+
+export function capitalize(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}

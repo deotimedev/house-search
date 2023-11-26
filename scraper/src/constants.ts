@@ -1,8 +1,11 @@
 export default {
     index: "../index/",
     webIndex: "https://clinic-duty.livejournal.com/12225.html",
-    vectors: "../vectors.ndjson",
-    embeddingBatchSize: 100, // arbitrary? i couldnt find an exact number but 200 breaks for some reason
+    embeddingBatchSize: 100,
+    uploadBatchSize: 1000,
+    knownEntryAmount: 79721,
+    maxUploadRetry: 3,
+    indexName: "transcripts-index",
     excludedStartingLines: [
         "transcribed",
         "disclaimer",
@@ -22,6 +25,28 @@ export default {
         "to all jewish house-fans", // ??
         "number name sex description",
         "------"
+    ],
+    parseIgnore: [
+        "OPENING CREDITS",
+        "[OPENING CREDITS]",
+        "CUT TO",
+        "ROLL CREDITS",
+        "(ROLL CREDITS)",
+        "CREDIT ROLLS",
+        "CUE MUSIC",
+        "TA DA",
+        "NEW CREDIT ROLLS",
+        "[ACT ",
+        "[END OF ACT ",
+        "[END]",
+        "[END OF TEASER]",
+        "__________________________DOB____",
+        "BACK TO SCENE",
+        "INT. -",
+        "DOC - B & W",
+        "SERIES OF SHOTS",
+        "OR CONTROL ROOM",
+        "♪♫"
     ],
     specialCasedEps: [
         [1, 22],
