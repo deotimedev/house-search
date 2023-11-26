@@ -9,5 +9,5 @@
         <p>{character.toUpperCase()}</p>
         <img alt={character} src="/characters/{character.toLowerCase()}.png" class="rounded-full max-h-[75%]" />
     </div>
-    <p class="pl-10 text-2xl">"{entry.text.replace(`${entry.character}:`, "")}"</p>
+    <p class="pl-10 text-2xl flex-1 shrink">"{entry.text.replace(`${entry.character}:`, "")}"</p>
 </div>

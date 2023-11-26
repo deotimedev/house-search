@@ -19,5 +19,16 @@ export async function GET(req: RequestEvent) {
     })).matches, (m) => m.vectorId)
     if (!matches) return Response.json("No matches found")
     const vectors = await env.VECTORIZE_INDEX.getByIds(Object.keys(matches))
-    return Response.json(_.sortBy(vectors, (v) => matches[v.id]).map(v => v.metadata).reverse())
+    const ranked = _.sortBy(vectors, (v) => matches[v.id].score).reverse()
+    {
+        console.log("-----------------")
+        console.log(`Search: ${search}`)
+        console.log("Top results: ")
+        ranked.forEach(v => {
+            const score = Math.round(matches[v.id].score * 100)
+            console.log(` - ${score}%: ${v.metadata!.text}`)
+        })
+        console.log("-----------------")
+    }
+    return Response.json(ranked.map(v => v.metadata))
 }

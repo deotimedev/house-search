@@ -88,13 +88,17 @@ async function exportIndexesToVectors() {
             let context: string | undefined = undefined
             let i = 0
             for (let line of lines) {
+                line = line.trim()
+                if (line === "") continue
                 if (constants.parseIgnore.some(i => line.startsWith(i))) continue
-                if (line.startsWith("[") && line.endsWith("]")) {
+                if (line.startsWith("[") || line.startsWith("(")) {
                     context = line
                     continue
                 }
 
-                let character = line.split(":")[0] ?? "Unknown"
+                const split = line.split(":")
+                if (split.length === 1) continue
+                let character = split[0] ?? "Unknown"
 
                 // some eps have inconsistent character naming (`GREG HOUSE` instead of `House`)
                 const names = character.split(" ")
@@ -213,22 +217,19 @@ async function main() {
 
 require("dotenv").config()
 
-type Config = {
-    vectorOutput: string,
-    model: string
-}
-
-let config: Config
+const createConfig = async () => ({
+    vectorOutput: await inquirer.input({
+        message: "Vector output file",
+        default: "vectors.ndjson"
+    }),
+    model: await inquirer.input({
+        message: "Embedding model",
+        default: "@cf/baai/bge-base-en-v1.5"
+    })
+})
+// hack because top-level await is weird
+let config: Awaited<ReturnType<typeof createConfig>>
 (async () => {
-    config = {
-        vectorOutput: await inquirer.input({
-            message: "Vector output file",
-            default: "vectors.ndjson"
-        }),
-        model: await inquirer.input({
-            message: "Embedding model",
-            default: "@cf/baai/bge-base-en-v1.5"
-        })
-    }
+    config = await createConfig()
     await main()
 })()
