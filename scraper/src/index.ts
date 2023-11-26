@@ -4,15 +4,15 @@ import * as fs from "fs/promises";
 import * as fs_sync from "fs";
 // @ts-ignore
 import path from "path";
-import * as utils from "@house-search/utils"
 import {PathLike} from "fs";
-import {Entry} from "./model";
+import {model, utils, ai} from "@house-search/utils";
 import * as progress from "cli-progress"
 import * as inquirer from "@inquirer/prompts"
 // @ts-ignore
 import chalk from "chalk"
 import TagElement = cheerio.TagElement;
 import * as rl from "readline"
+import _ from "lodash";
 
 async function checkExists(path: PathLike): Promise<boolean> {
     return fs.access(path)
@@ -47,7 +47,7 @@ async function indexSeason(season: number, data: cheerio.TagElement) {
     console.log()
     console.log(`Season ${season}:`)
     console.log("-----------------------------")
-    for (const [b, a] of utils.zip($("b").toArray(), $("a").toArray())) {
+    for (const [b, a] of _.zip($("b").toArray(), $("a").toArray())) {
         const episode = Number((b as TagElement).firstChild!.data!.split(".")[1])
         const link = (a as TagElement).attribs["href"]
         await indexEpisode(season, episode, link)
@@ -80,7 +80,7 @@ async function exportIndexesToVectors() {
     const vectors = path.join(__dirname, "../", config.vectorOutput)
 
     const numerical = (a: string, b: string) => Number(a) - Number(b)
-    const entries: Entry[] = []
+    const entries: model.Entry[] = []
     const parseBar = createBar("Parsing Indexes", constants.knownEntryAmount)
     for (const season of (await fs.readdir(indexes)).sort(numerical)) {
         for (const episode of (await fs.readdir(path.join(indexes, season))).sort(numerical)) {
@@ -99,11 +99,11 @@ async function exportIndexesToVectors() {
                 // some eps have inconsistent character naming (`GREG HOUSE` instead of `House`)
                 const names = character.split(" ")
                 if (names.length == 2 && utils.isUppercase(character) && isNaN(Number(names[1]))) {
-                    const newName = utils.capitalize(names[1].toLowerCase())
+                    const newName = _.capitalize(names[1].toLowerCase())
                     line = line.replace(character, newName)
                     character = newName
                 }
-                const entry: Entry = {
+                const entry: model.Entry = {
                     text: line,
                     ep: {
                         season: Number(season),
@@ -123,18 +123,18 @@ async function exportIndexesToVectors() {
     const embedBar = createBar("Creating Vectors", entries.length, 1, 100)
     await fs.writeFile(vectors, "")
     let id = 0
-    for (const chunk of utils.chunked(entries, constants.embeddingBatchSize)) {
-        const embeddings = await utils.ai.createEmbedding(chunk.map(e => e.text), {
+    for (const chunk of _.chunk(entries, constants.embeddingBatchSize)) {
+        const embeddings = await ai.createEmbedding(chunk.map(e => e.text), {
             model: config.model,
             cloudflareAccountId: process.env.CLOUDFLARE_ACCOUNT_ID!,
             cloudflareApiKey: process.env.CLOUDFLARE_API_KEY!
         })
-        const data = utils.zip(chunk, embeddings)
+        const data = _.zip(chunk, embeddings)
             .map(([entry, values], i) => JSON.stringify({
                 id: `${id + i}`,
                 values,
                 metadata: entry,
-                namespace: `${entry.ep.season}:${entry.ep.number}`
+                namespace: `${entry?.ep.season}:${entry?.ep.number}`
             }))
         const joined = data.join("\n")
         // append to a file in order to avoid OOM error

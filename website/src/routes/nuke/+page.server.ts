@@ -1,6 +1,6 @@
 import type {RequestEvent} from "@sveltejs/kit";
 import {error} from "@sveltejs/kit";
-import * as utils from "@house-search/utils";
+import _ from "lodash";
 
 export async function load(req: RequestEvent): Promise<{ ids: string[] }> {
     const env = req.platform?.env
@@ -8,7 +8,7 @@ export async function load(req: RequestEvent): Promise<{ ids: string[] }> {
     const vectorize = env.VECTORIZE_INDEX
     const count = (await vectorize.describe()).vectorsCount
     const ids = [...Array(count).keys()].map(n => `${n + 1}`)
-    for (const chunk of utils.chunked(ids, 20)) {
+    for (const chunk of _.chunk(ids, 20)) {
         await vectorize.deleteByIds(chunk)
     }
     return {
