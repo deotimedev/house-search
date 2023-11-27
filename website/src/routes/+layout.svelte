@@ -11,5 +11,6 @@
         background-image: url("/scan.png");
         background-repeat: no-repeat;
         background-size: 100% 100%;
+        background-attachment: fixed;
     }
 </style>
