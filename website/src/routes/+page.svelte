@@ -6,16 +6,17 @@
     import {SyncLoader} from "svelte-loading-spinners"
     import Entry from "$lib/components/Entry.svelte";
     import {model} from "@house-search/utils"
+    import type {ScoredEntry} from "./search/SearchResults";
 
     let ready = false
     onMount(() => ready = true)
 
-    let results: Promise<model.Entry[]> | undefined
+    let results: Promise<ScoredEntry[]> | undefined
 </script>
 
 
 {#if ready}
-    <div class="flex flex-col items-center space-y-5 pt-52" style="height: 100%">
+    <div class="flex flex-col items-center space-y-5 pt-[15.6vh]" style="height: 100%">
         <div transition:fly={{ y: 100, duration: 1000 }}><Title/></div>
         <div transition:fly={{ y: 200, duration: 1000 }}>
             <Search on:search={(e) => {
@@ -43,12 +44,23 @@
         {#each [1, 2, 3] as n}
             <div class="flex items-center flex-col">
                 <Entry entry={{
-                            text: "Hello i am doctor house",
-                            // text: "And what do you have to do to get an A in You’re Dying 101? They grade you on gentleness and supportiveness? Is there a scale for measuring compassion? This buddy of mine, I gotta give him ten bucks every time somebody says “Thank you.” Imagine that. This guy’s so good, people thank him for telling them that they’re dying. [He looks at his picture.] Eh, needs brown. I don’t get thanked that often.",
+                            text: "(shouting) Life is pain! I wake up every morning, I'm in pain. I go to work in pain. You know how many times I wanted to just give up? How many times I thought about ending it?",
                             character: "House",
                             ep: {
-                                season: 5,
-                                number: 12
+                                season: 8,
+                                number: 21
+                            },
+                            id: "idk",
+                            score: 5,
+                            replyingTo: {
+                                text: "You can't just give up on Wilson. You know he needs you. You know he's making an impossible choice. He just doesn’t want to live in pain.",
+                                character: "Taub",
+                                ep: {
+                                    season: 8,
+                                    number: 21
+                                },
+                                id: "asdf",
+                                score: 5,
                             }
                         }} />
             </div>

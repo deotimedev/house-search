@@ -1,24 +1,23 @@
 <script lang="ts">
-    import {model} from "@house-search/utils"
     import ReplyingTo from "$lib/components/ReplyingTo.svelte";
+    import type {ScoredEntry} from "../../routes/search/SearchResults";
 
-    export let entry: model.Entry
-    export let isReplying = true // todo remove this!!
+    export let entry: ScoredEntry
     $: character = entry.character.trim()
+    $: text = entry.text.replace(`${entry.character}:`, "").trim()
 </script>
 
-<div>
-    <!--    TODO fetch the actual message this entry is replying to here-->
-    {#if isReplying}
-        <ReplyingTo entry={entry}/>
+<div class="w-[60vw]">
+    {#if entry.replyingTo}
+        <ReplyingTo entry={entry.replyingTo}/>
     {/if}
 
-    <div class="flex items-center bg-white w-[60vw] rounded-2xl pt-1 pb-1">
+    <div id="textbox" class="flex items-center bg-white rounded-2xl pt-1 pb-1">
         <div class="pl-5 flex flex-col items-center bg-white rounded-2xl">
-            <p class="font-bold">{character.toUpperCase()}</p>
-            <img alt={character} src="/characters/{character.toLowerCase()}.png" class="rounded-full max-h-[70px]"/>
-            <p>S{entry.ep.season} E{entry.ep.number}</p>
+            <p class="text-[1vw] font-bold">{character.toUpperCase()}</p>
+            <img alt={character} src="/characters/{character.toLowerCase()}.png" class="rounded-full max-h-[3.5vw]"/>
+            <p class="text-[1vw]">S{entry.ep.season} E{entry.ep.number}</p>
         </div>
-        <p class="pl-5 text-2xl flex-1">"{entry.text.replace(`${entry.character}:`, "")}"</p>
+        <p class="pl-5 text-[1.5vw] flex-1">"{text}"</p>
     </div>
 </div>
