@@ -1,11 +1,30 @@
 <script lang="ts">
 
     import {createEventDispatcher} from "svelte";
+    import Select from "svelte-select";
+    import {page} from "$app/stores"
 
-    let value = ""
+    let value = ``
     const dispatch = createEventDispatcher()
+
+
+    // there has to be a better way of this but i cant find something compatible with cf workers
+    const characters = [
+        "House",
+        "Cuddy",
+        "Wilson",
+        "Foreman",
+        "Chase",
+        "Cameron",
+        "Taub",
+        "Thirteen",
+        "Kutner",
+        "Amber"
+    ]
+
+    let characterFilter: string | undefined
     const doSearch = () => dispatch("search", {
-        query: value
+        query: characterFilter ? `${characterFilter}: ${value}` : value
     })
 </script>
 
@@ -14,4 +33,19 @@
     <button on:click={doSearch} class="flex justify-center items-center bg-blue-600 bg-blend-color rounded-2xl w-[10%] transition duration-300 ease-in-out hover:bg-blue-400 active:bg-blue-300">
         <img class="max-h-[50%]" alt="Search" src="/search.png" />
     </button>
+</div>
+
+<div class="w-screen flex flex-row justify-center pt-[1vh]">
+    <div class="items-center flex w-[15%]">
+        <Select items={characters} --item-height="100%" placeholder="Filter Character" bind:value={characterFilter}>
+            <div class="flex self-center items-center" slot="item" let:item let:index>
+                <img alt={item.label} src="/characters/{item.label.toLowerCase()}.png" class="rounded-full max-h-[3.5vw]"/>
+                <p class="pl-5">{item.label}</p>
+            </div>
+            <div class="flex self-center items-center" slot="selection" let:selection let:index>
+                <img alt={selection.label} src="/characters/{selection.label.toLowerCase()}.png" class="rounded-full max-h-[1.5vw]"/>
+                <p class="pl-2">{selection.label}</p>
+            </div>
+        </Select>
+    </div>
 </div>
