@@ -7,6 +7,7 @@
     import Entry from "$lib/components/Entry.svelte";
     import {model} from "@house-search/utils"
     import type {ScoredEntry} from "./search/SearchResults";
+    import _, { sortBy } from "lodash";
 
     let ready = false
     onMount(() => ready = true)
@@ -20,8 +21,8 @@
         <div transition:fly={{ y: 100, duration: 1000 }}><Title/></div>
         <div transition:fly={{ y: 200, duration: 1000 }}>
             <Search on:search={(e) => {
-                // TODO make query here
                 const query = e.detail.query
+                console.log(`The query in question: ${query}`)
                 results = (async () => {
                     const res = await fetch(`/search?q=${query}`)
                     return await res.json()
@@ -29,19 +30,19 @@
             }}/>
         </div>
 
-        <!--{#if results}-->
-        <!--    {#await results}-->
-        <!--        <SyncLoader size="60" color="#FFFFFF" unit="px" duration="0.5s"/>-->
-        <!--    {:then results}-->
-        <!--        {#each results as result, i}-->
-        <!--            <div in:fly|global={{ y: 150, duration: 1000, delay: (i * 100) }} class="min-w-[100%] flex items-center flex-col">-->
-        <!--                <Entry entry={result} />-->
-        <!--            </div>-->
-        <!--        {/each}-->
-        <!--    {/await}-->
-        <!--{/if}-->
+        {#if results}
+            {#await results}
+                <SyncLoader size="60" color="#FFFFFF" unit="px" duration="0.5s"/>
+            {:then results}
+                {#each (_.orderBy(results, "score", "desc")) as result, i}
+                    <div in:fly|global={{ y: 150, duration: 1000, delay: (i * 100) }} class="min-w-[100%] flex items-center flex-col">
+                        <Entry entry={result} />
+                    </div>
+                {/each}
+            {/await}
+        {/if}
 
-        {#each [1, 2, 3, 4] as n}
+         <!-- {#each [1, 2, 3, 4] as n}
             <div class="flex items-center flex-col">
                 <Entry entry={{
                             text: "(shouting) Life is pain! I wake up every morning, I'm in pain. I go to work in pain. You know how many times I wanted to just give up? How many times I thought about ending it?",
@@ -58,13 +59,11 @@
                                 ep: {
                                     season: 8,
                                     number: 21
-                                },
-                                id: "asdf",
-                                score: 5,
+                                }
                             }
                         }} />
             </div>
-        {/each}
+        {/each}  -->
     </div>
 {/if}
 

@@ -3,6 +3,7 @@
     import {createEventDispatcher} from "svelte";
     import Select from "svelte-select";
     import {page} from "$app/stores"
+    import CharacterIcon from "./CharacterIcon.svelte";
 
     let value = ``
     const dispatch = createEventDispatcher()
@@ -22,9 +23,9 @@
         "Amber"
     ]
 
-    let characterFilter: string | undefined
+    let characterFilter: { value: string } | undefined
     const doSearch = () => dispatch("search", {
-        query: characterFilter ? `${characterFilter}: ${value}` : value
+        query: characterFilter ? `${characterFilter.value}: ${value}` : value
     })
 </script>
 
@@ -38,12 +39,12 @@
 <div class="w-screen flex flex-row justify-center pt-[1vh]">
     <div class="items-center flex w-[15%]">
         <Select items={characters} --item-height="100%" placeholder="Filter Character" bind:value={characterFilter}>
-            <div class="flex self-center items-center" slot="item" let:item let:index>
-                <img alt={item.label} src="/characters/{item.label.toLowerCase()}.png" class="rounded-full max-h-[3.5vw]"/>
+            <div class="flex self-center items-center" slot="item" let:item>
+                <CharacterIcon character={item.label} class="max-h-[3.5vw]" />
                 <p class="pl-5">{item.label}</p>
             </div>
-            <div class="flex self-center items-center" slot="selection" let:selection let:index>
-                <img alt={selection.label} src="/characters/{selection.label.toLowerCase()}.png" class="rounded-full max-h-[1.5vw]"/>
+            <div class="flex self-center items-center" slot="selection" let:selection>
+                <CharacterIcon character={selection.label} class="max-h-[1.5vw]" />
                 <p class="pl-2">{selection.label}</p>
             </div>
         </Select>
