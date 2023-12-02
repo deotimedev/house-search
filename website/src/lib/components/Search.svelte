@@ -22,7 +22,6 @@
         "Taub",
         "Thirteen",
         "Tritter",
-        "Unknown",
         "Vogler",
         "Wilson",
     ];
@@ -41,12 +40,13 @@
         <Select
             items={characters}
             --item-height="100%"
+            --item-padding="0px"
             placeholder="Filter Character"
             bind:value={characterFilter}
         >
-            <div class="flex self-center items-center" slot="item" let:item>
-                <CharacterIcon character={item.label} class="max-h-[3.5vw]" />
-                <p class="pl-5">{item.label}</p>
+            <div class="flex self-center items-center min-w-[50vw]" slot="item" let:item>
+                <CharacterIcon character={item.label} class="max-h-[3.5vw] min-h-[30px]" />
+                <p class="pl-[1vw]">{item.label}</p>
             </div>
             <div
                 class="flex self-center items-center"
@@ -57,7 +57,7 @@
                     character={selection.label}
                     class="min-h-[32px] min-w-[32px] max-h-[1.5vw]"
                 />
-                <p class="pl-2">{selection.label}</p>
+                <p class="pl-[1vw]">{selection.label}</p>
             </div>
         </Select>
     </div>
@@ -81,6 +81,8 @@
     </button>
 </div>
 
-<!-- <div class="w-screen flex flex-row justify-center pt-[1vh]">
-
-</div> -->
+<style>
+    :global(.svelte-select-list) {
+        min-width: 150px !important; 
+    }
+</style>
