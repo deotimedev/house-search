@@ -23,7 +23,7 @@
                 <CharacterIcon {character} class="max-h-[1.5vw]" />
                 <p class="pl-1 text-[0.8vw] font-bold">{character.toUpperCase()}:</p>
             </div>
-            <p class="{!expanded ? `line-clamp-1` : ``} pl-2 pr-2 text-[1vw] flex-1 overflow-hidden">"{text}"</p>
+            <p class="{!expanded ? `line-clamp-1` : ``} pl-2 pr-2 flex-1 overflow-hidden" style="font-size: max(8px, 1vw);">"{text}"</p>
 
         </div>
         
