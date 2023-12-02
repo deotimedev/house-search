@@ -5,13 +5,10 @@
 
     export let entry: model.Entry
     let expanded = false
-    let screenWidth = window.innerWidth
 
     $: character = characters.format(entry.character)
     $: text = entry.text.replace(`${entry.character}:`, "").trim()
 </script>
-
-<svelte:window bind:innerWidth={screenWidth}/>
 
 <div class="flex items-center ml-5">
     <img
