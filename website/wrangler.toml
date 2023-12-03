@@ -4,6 +4,7 @@ site.bucket = "./.cloudflare/public"
 build.command = "npm run build"
 compatibility_date = "2023-10-30"
 workers_dev = true
+logpush = true
 
 [[vectorize]]
 binding = "VECTORIZE_INDEX" # available within your Worker on env.VECTORIZE_INDEX
