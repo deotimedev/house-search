@@ -1,5 +1,5 @@
 export async function send(url: string, content: any) {
-    const payload = JSON.stringify({ content });
+    const payload = JSON.stringify(content);
 
     const response = await fetch(url, {
         method: 'POST',
@@ -8,7 +8,7 @@ export async function send(url: string, content: any) {
         },
         body: payload,
     });
-    
+
     if (!response.ok) throw new Error(`Error: ${response.status}`);
 
 }

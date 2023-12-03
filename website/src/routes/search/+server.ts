@@ -30,22 +30,20 @@ export async function GET(req: RequestEvent) {
 
     if (env.LOGGING_URL) {
         const log = `
-        -----------------
-        Search: ${search}
-        Top results: 
-        ${
-            _.join(vectors.map(v => {
-                const score = Math.round(matches[v.id].score * 100)
-                return ` - ${score}%: ${v.metadata!.text}`
-            }), "\n")
-        }
-        -----------------
+-----------------
+Search: ${search}
+Top results: 
+${_.join(vectors.map(v => {
+            const score = Math.round(matches[v.id].score * 100)
+            return ` - ${score}%: ${v.metadata!.text}`
+        }), "\n")}
+-----------------
         `
         logging.send(env.LOGGING_URL, {
-            content: log
+            content: "```" + log + "```"
         })
     }
-    
+
 
     return Response.json(
         vectors.map(v => {
