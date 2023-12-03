@@ -34,7 +34,9 @@
                     const query = e.detail.query;
                     console.log(`The query in question: ${query}`);
                     results = (async () => {
+                        throw "asdf"
                         const res = await fetch(`/search?q=${query}`);
+                        if (!res.ok) throw new Error("Error making search")
                         return await res.json();
                     })();
                 }}
@@ -57,6 +59,11 @@
                         <Entry entry={result} />
                     </div>
                 {/each}
+            {:catch}
+                <div class="flex items-center bg-red-400 rounded-md pr-5 border-red-500 border-4 max-w-[50%]">
+                    <img class="object-cover max-h-[5vh]" src="/error.png" alt="Error">
+                    <p class="text-[max(1vw,10px)] font-bold text-white">An error occurred while making this search, please try again later.</p>
+                </div>
             {/await}
         {/if}
 

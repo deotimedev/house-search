@@ -32,17 +32,31 @@
                 ? `${characterFilter.value}: ${value}`
                 : value,
         });
+
+    let windowWidth = 0;
 </script>
 
+<svelte:window bind:innerWidth={windowWidth} />
+
 <div class="w-screen flex flex-row space-x-3 justify-center max-h-[5vh]">
-    <div class="items-center flex w-[10%] min-w-[90px]">
+    <div class="items-center flex w-[{windowWidth >= 1000 ? 10 : (characterFilter ? 10 : 5)}%] min-w-[{characterFilter ? 90 : 0}px]">
         <Select
             items={characters}
             --item-height="100%"
             --item-padding="0px"
-            placeholder="Filter Character"
+            --padding="0px 10px 0px 5px"
+            placeholder={windowWidth >= 1000 ? "Character" : undefined}
             bind:value={characterFilter}
         >
+            <span slot="prepend">
+                {#if windowWidth >= 1150 || !characterFilter}
+                    <img
+                        class="max-h-[20px] pr-1"
+                        src="/filter.png"
+                        alt="Filter character"
+                    />
+                {/if}
+            </span>
             <div
                 class="flex self-center items-center min-w-[50vw]"
                 slot="item"
@@ -63,7 +77,7 @@
                     character={selection.label}
                     class="min-h-[32px] min-w-[32px] max-h-[1.5vw]"
                 />
-                <p class="pl-[1vw]">{selection.label}</p>
+                <p class="pl-[0.5vw]">{selection.label}</p>
             </div>
         </Select>
     </div>
@@ -90,5 +104,8 @@
 <style>
     :global(.svelte-select-list) {
         min-width: 150px !important;
+    }
+    :global(input.svelte-82qwg8::placeholder) {
+        font-size: max(1vw, 10px);
     }
 </style>
