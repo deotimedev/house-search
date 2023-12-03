@@ -39,7 +39,7 @@ ${_.join(vectors.map(v => {
         }), "\n")}
 -----------------
         `
-        logging.send(env.LOGGING_URL, {
+        await logging.send(env.LOGGING_URL, {
             content: "```" + log + "```"
         })
     }
