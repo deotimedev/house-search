@@ -3,11 +3,10 @@
     import {fly} from "svelte/transition"
     import {onMount} from "svelte";
     import Search from "$lib/components/Search.svelte";
-    import {SyncLoader} from "svelte-loading-spinners"
     import Entry from "$lib/components/Entry.svelte";
-    import {model} from "@house-search/utils"
     import type {ScoredEntry} from "./search/SearchResults";
-    import _, { sortBy } from "lodash";
+    import _ from "lodash";
+    import SocialIcon from "$lib/components/SocialIcon.svelte";
 
     let ready = false
     onMount(() => ready = true)
@@ -17,7 +16,15 @@
 
 
 {#if ready}
+    <div class="flex justify-end pr-[2vw] pt-[2vw]">
+        <SocialIcon 
+            type="github"
+            username="@deotimedev"
+            link="https://github.com/deotimedev/house-search"
+        />
+    </div>
     <div class="flex flex-col items-center space-y-5 pt-[15.6vh]" style="height: 100%">
+        
         <div transition:fly={{ y: 100, duration: 1000 }}><Title/></div>
         <div transition:fly={{ y: 200, duration: 1000 }}>
             <Search on:search={(e) => {
@@ -30,7 +37,7 @@
             }}/>
         </div>
 
-        {#if results}
+        <!-- {#if results}
             {#await results}
                 <SyncLoader size="60" color="#FFFFFF" unit="px" duration="0.5s"/>
             {:then results}
@@ -40,9 +47,9 @@
                     </div>
                 {/each}
             {/await}
-        {/if}
+        {/if} -->
 
-         <!-- {#each [1, 2, 3, 4] as n}
+         {#each [1, 2, 3, 4] as n}
             <div class="flex items-center flex-col">
                 <Entry entry={{
                             text: "(shouting) Life is pain! I wake up every morning, I'm in pain. I go to work in pain. You know how many times I wanted to just give up? How many times I thought about ending it?",
@@ -63,7 +70,7 @@
                             }
                         }} />
             </div>
-        {/each}  -->
+        {/each} 
     </div>
 {/if}
 
