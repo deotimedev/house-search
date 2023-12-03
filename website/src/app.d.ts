@@ -13,6 +13,7 @@ declare global {
 			env?: {
 				CLOUDFLARE_ACCOUNT_ID: string,
 				CLOUDFLARE_API_KEY: string,
+				LOGGING_URL: string | undefined,
 				AI: Ai,
 				VECTORIZE_INDEX: VectorizeIndex
 			}

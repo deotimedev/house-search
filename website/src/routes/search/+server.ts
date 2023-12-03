@@ -1,6 +1,6 @@
 import type { RequestEvent } from "@sveltejs/kit";
 import { error } from "@sveltejs/kit";
-import { model, ai } from "@house-search/utils";
+import { model, ai, logging } from "@house-search/utils";
 import _ from "lodash";
 import type { ScoredEntry } from "./SearchResults"
 
@@ -28,16 +28,24 @@ export async function GET(req: RequestEvent) {
         .keyBy(v => v.id)
         .value()
 
-    {
-        console.log("-----------------")
-        console.log(`Search: ${search}`)
-        console.log("Top results: ")
-        vectors.forEach(v => {
-            const score = Math.round(matches[v.id].score * 100)
-            console.log(` - ${score}%: ${v.metadata!.text}`)
+    if (env.LOGGING_URL) {
+        const log = `
+        -----------------
+        Search: ${search}
+        Top results: 
+        ${
+            _.join(vectors.map(v => {
+                const score = Math.round(matches[v.id].score * 100)
+                return ` - ${score}%: ${v.metadata!.text}`
+            }), "\n")
+        }
+        -----------------
+        `
+        logging.send(env.LOGGING_URL, {
+            content: log
         })
-        console.log("-----------------")
     }
+    
 
     return Response.json(
         vectors.map(v => {
