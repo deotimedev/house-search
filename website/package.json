@@ -27,7 +27,7 @@
 	"dependencies": {
 		"@cloudflare/ai": "^1.0.30",
 		"@cloudflare/workers-types": "^4.20231025.0",
-		"@house-search/utils": "file:../utils",
+		"@house-search/shared": "file:../shared",
 		"svelte-select": "^5.8.1"
 	}
 }

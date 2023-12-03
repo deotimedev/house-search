@@ -17,7 +17,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@house-search/utils": "file:../utils",
+    "@house-search/shared": "file:../utils",
     "@inquirer/prompts": "^3.3.0",
     "chalk": "4.1.2",
     "cheerio": "^1.0.0-rc.12",

@@ -1,4 +1,4 @@
-import type {model} from "@house-search/utils"
+import type {model} from "@house-search/shared"
 
 export type ScoredEntry = {
     id: string,

@@ -3,7 +3,7 @@
   "workspaces": [
     "website",
     "scraper",
-    "utils"
+    "shared"
   ],
   "scripts": {
     "scrape": "cd scraper && npm start && cd ../",

@@ -1,6 +1,6 @@
 import type { RequestEvent } from "@sveltejs/kit";
 import { error } from "@sveltejs/kit";
-import { model, ai, logging } from "@house-search/utils";
+import { model, ai, logging } from "@house-search/shared";
 import _ from "lodash";
 import type { ScoredEntry } from "./SearchResults"
 

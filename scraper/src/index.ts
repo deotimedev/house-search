@@ -5,7 +5,7 @@ import * as fs_sync from "fs";
 // @ts-ignore
 import path from "path";
 import {PathLike} from "fs";
-import {model, utils, ai} from "@house-search/utils";
+import {model, utils, ai} from "@house-search/shared";
 import * as progress from "cli-progress"
 import * as inquirer from "@inquirer/prompts"
 // @ts-ignore

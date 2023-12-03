@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { model } from "@house-search/utils";
+    import type { model } from "@house-search/shared";
     import CharacterIcon from "./CharacterIcon.svelte";
     import characters from "$lib/characters";
 
