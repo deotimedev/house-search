@@ -1,7 +1,7 @@
 <script lang="ts">
     export let character: string;
 
-    let src = `/characters/${character.toLowerCase()}.png`
+    $: src = `/characters/${character.toLowerCase()}.png`
 </script>
 
 <img

@@ -30,7 +30,7 @@
             }}/>
         </div>
 
-        <!-- {#if results}
+        {#if results}
             {#await results}
                 <SyncLoader size="60" color="#FFFFFF" unit="px" duration="0.5s"/>
             {:then results}
@@ -40,9 +40,9 @@
                     </div>
                 {/each}
             {/await}
-        {/if} -->
+        {/if}
 
-         {#each [1, 2, 3, 4] as n}
+         <!-- {#each [1, 2, 3, 4] as n}
             <div class="flex items-center flex-col">
                 <Entry entry={{
                             text: "(shouting) Life is pain! I wake up every morning, I'm in pain. I go to work in pain. You know how many times I wanted to just give up? How many times I thought about ending it?",
@@ -63,7 +63,7 @@
                             }
                         }} />
             </div>
-        {/each} 
+        {/each}  -->
     </div>
 {/if}
 
