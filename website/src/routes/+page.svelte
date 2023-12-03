@@ -34,7 +34,6 @@
                     const query = e.detail.query;
                     console.log(`The query in question: ${query}`);
                     results = (async () => {
-                        throw "asdf"
                         const res = await fetch(`/search?q=${query}`);
                         if (!res.ok) throw new Error("Error making search")
                         return await res.json();
