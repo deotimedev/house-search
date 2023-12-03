@@ -1,8 +1,8 @@
-import type {RequestEvent} from "@sveltejs/kit";
-import {error} from "@sveltejs/kit";
-import {model, ai} from "@house-search/utils";
+import type { RequestEvent } from "@sveltejs/kit";
+import { error } from "@sveltejs/kit";
+import { model, ai } from "@house-search/utils";
 import _ from "lodash";
-import type {ScoredEntry} from "./SearchResults"
+import type { ScoredEntry } from "./SearchResults"
 
 export async function GET(req: RequestEvent) {
     const env = req.platform?.env
@@ -16,7 +16,7 @@ export async function GET(req: RequestEvent) {
         cloudflareApiKey: env.CLOUDFLARE_API_KEY
     })
     const matches = _.keyBy((await vectorize.query(embedding, {
-        topK: 3,
+        topK: 10,
         namespace
     })).matches, (m) => m.vectorId)
     if (!matches) return Response.json("No matches found")

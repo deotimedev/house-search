@@ -54,7 +54,7 @@
                             id: "idk",
                             score: 5,
                             replyingTo: {
-                                text: "You can't just give up on Wilson. You know he needs you. You know he's making an impossible choice. He just doesn’t want to live in pain.",
+                                text: "You can't just e choice. He just doesn’tsadfsdaffsdfsdfasdadsf  asdfasdf wdsafasdfsdfant to live in pain.",
                                 character: "Taub",
                                 ep: {
                                     season: 8,

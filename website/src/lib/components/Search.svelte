@@ -1,29 +1,28 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import Select from "svelte-select";
-    import { page } from "$app/stores";
     import CharacterIcon from "./CharacterIcon.svelte";
 
     let value = ``;
     const dispatch = createEventDispatcher();
 
-    // there has to be a better way of this but i cant find something compatible with cf workers
     const characters = [
-        "Amber",
-        "Cameron",
-        "Chase",
-        "Cuddy",
-        "Foreman",
         "House",
-        "Kutner",
-        "Lucas",
-        "Masters",
-        "Stacy",
-        "Taub",
+        "Cuddy",
+        "Wilson",
+        "Foreman",
+        "Chase",
+        "Cameron",
         "Thirteen",
+        "Taub",
+        "Kutner",
+        "Amber",
+        "Masters",
+        "Adams",
+        "Park",
+        "Stacy",
         "Tritter",
         "Vogler",
-        "Wilson",
     ];
 
     let characterFilter: { value: string } | undefined;
@@ -44,8 +43,15 @@
             placeholder="Filter Character"
             bind:value={characterFilter}
         >
-            <div class="flex self-center items-center min-w-[50vw]" slot="item" let:item>
-                <CharacterIcon character={item.label} class="max-h-[3.5vw] min-h-[30px]" />
+            <div
+                class="flex self-center items-center min-w-[50vw]"
+                slot="item"
+                let:item
+            >
+                <CharacterIcon
+                    character={item.label}
+                    class="max-h-[3.5vw] min-h-[30px]"
+                />
                 <p class="pl-[1vw]">{item.label}</p>
             </div>
             <div
@@ -83,6 +89,6 @@
 
 <style>
     :global(.svelte-select-list) {
-        min-width: 150px !important; 
+        min-width: 150px !important;
     }
 </style>

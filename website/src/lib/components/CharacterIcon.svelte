@@ -1,7 +1,7 @@
 <script lang="ts">
     export let character: string;
 
-    $: src = `/characters/${character.toLowerCase()}.png`
+    $: src = `/characters/${character.toLowerCase()}.png`;
 </script>
 
 <img
@@ -9,6 +9,6 @@
     {src}
     class="rounded-full {$$props.class ?? ''}"
     on:error={() => {
-        src = "/characters/unknown.png"
+        src = "/characters/unknown.png";
     }}
 />
