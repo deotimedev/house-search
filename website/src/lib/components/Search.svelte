@@ -4,6 +4,7 @@
     import CharacterIcon from "./CharacterIcon.svelte";
 
     let value = ``;
+    $: query = value.trim()
     const dispatch = createEventDispatcher();
 
     const characters = [
@@ -27,10 +28,10 @@
 
     let characterFilter: { value: string } | undefined;
     const doSearch = () =>
-        dispatch("search", {
+        query && dispatch("search", {
             query: characterFilter
-                ? `${characterFilter.value}: ${value}`
-                : value,
+                ? `${characterFilter.value}: ${query}`
+                : query,
         });
 
     let windowWidth = 0;
