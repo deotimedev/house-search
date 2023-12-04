@@ -15,4 +15,4 @@ index_name = "transcripts-index"
 binding = "AI"
 
 [limits]
-cpu_ms = 100
+cpu_ms = 20
