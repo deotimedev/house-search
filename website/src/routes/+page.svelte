@@ -13,6 +13,12 @@
     onMount(() => (ready = true));
 
     let results: Promise<ScoredEntry[]> | undefined;
+
+    async function search(query: string) {
+        const res = await fetch(`/search?q=${query}`);
+        if (!res.ok) throw new Error("Error making search")
+        return await res.json();
+    }
 </script>
 
 {#if ready}
@@ -32,12 +38,7 @@
             <Search
                 on:search={(e) => {
                     const query = e.detail.query;
-                    console.log(`The query in question: ${query}`);
-                    results = (async () => {
-                        const res = await fetch(`/search?q=${query}`);
-                        if (!res.ok) throw new Error("Error making search")
-                        return await res.json();
-                    })();
+                    results = search(query)
                 }}
             />
         </div>
@@ -65,28 +66,5 @@
                 </div>
             {/await}
         {/if}
-
-        <!-- {#each [1, 2, 3, 4] as n}
-            <div class="flex items-center flex-col">
-                <Entry entry={{
-                            text: "(shouting) Life is pain! I wake up every morning, I'm in pain. I go to work in pain. You know how many times I wanted to just give up? How many times I thought about ending it?",
-                            character: "House",
-                            ep: {
-                                season: 8,
-                                number: 21
-                            },
-                            id: "idk",
-                            score: 5,
-                            replyingTo: {
-                                text: "You can't just e choice. He just doesn’tsadfsdaffsdfsdfasdadsf  asdfasdf wdsafasdfsdfant to live in pain.",
-                                character: "Taub",
-                                ep: {
-                                    season: 8,
-                                    number: 21
-                                }
-                            }
-                        }} />
-            </div>
-        {/each}  -->
     </div>
 {/if}
