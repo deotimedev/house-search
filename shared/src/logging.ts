@@ -9,6 +9,8 @@ export async function send(url: string, content: any) {
         body: payload,
     });
 
-    if (!response.ok) throw new Error(`Error: ${response.status}`);
+    if (!response.ok) {
+        console.error(`Error while creating log: (${response.status}) ${await response.text()}`)
+    }
 
 }
