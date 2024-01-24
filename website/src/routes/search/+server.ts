@@ -20,7 +20,7 @@ export async function GET(req: RequestEvent) {
         namespace
     })).matches, (m) => m.vectorId)
     if (!matches) return Response.json("No matches found")
-    const vectors = await vectorize.getByIds(Object.keys(matches))
+    const vectors = _(await vectorize.getByIds(Object.keys(matches))).orderBy((v) => matches[v.id].score, "desc").value()
     const previousQuotes = _(await vectorize.getByIds(_(vectors)
         .map(v => v.metadata!.responseTo as string | undefined)
         .compact()
