@@ -13,3 +13,4 @@ vite.config.ts.timestamp-*
 .cloudflare
 .wrangler
 /scraper/vectors.ndjson
+/website/static/sitemap.xml
