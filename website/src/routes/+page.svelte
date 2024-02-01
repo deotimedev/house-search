@@ -59,6 +59,11 @@
                         <Entry entry={result} />
                     </div>
                 {/each}
+                <br>
+                <p class="max-w-[40vw] text-[max(0.75vw,10px)] text-center text-white">
+                    <strong>Can't find the quote you're looking for?</strong> Try using the character filter to the left of the search bar, or including more specific terms in the search.
+                </p>
+                <br>
             {:catch}
                 <div class="flex items-center bg-red-400 rounded-md pr-5 border-red-500 border-4 max-w-[50%]">
                     <img class="object-cover max-h-[5vh]" src="/error.png" alt="Error">

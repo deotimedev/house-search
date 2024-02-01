@@ -2,6 +2,7 @@
     import { createEventDispatcher } from "svelte";
     import Select from "svelte-select";
     import CharacterIcon from "./CharacterIcon.svelte";
+    import Filter from "./Filter.svelte";
 
     let value = ``;
     $: query = value.trim()
@@ -51,11 +52,7 @@
         >
             <span slot="prepend">
                 {#if windowWidth >= 1150 || !characterFilter}
-                    <img
-                        class="max-h-[20px] pr-1"
-                        src="/filter.png"
-                        alt="Filter character"
-                    />
+                    <Filter />
                 {/if}
             </span>
             <div
