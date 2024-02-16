@@ -36,49 +36,52 @@
         });
 
     let windowWidth = 0;
+    $: isMobileish = windowWidth <= 1000
 </script>
 
 <svelte:window bind:innerWidth={windowWidth} />
 
 <div class="w-screen flex flex-row space-x-3 justify-center max-h-[5vh]">
-    <div class="items-center flex w-[{windowWidth >= 1000 ? 10 : (characterFilter ? 10 : 5)}%] min-w-[{characterFilter ? 90 : 0}px]">
-        <Select
-            items={characters}
-            --item-height="100%"
-            --item-padding="0px"
-            --padding="0px 10px 0px 5px"
-            placeholder={windowWidth >= 1000 ? "Character" : undefined}
-            bind:value={characterFilter}
-        >
-            <span slot="prepend">
-                {#if windowWidth >= 1150 || !characterFilter}
-                    <Filter />
-                {/if}
-            </span>
-            <div
-                class="flex self-center items-center min-w-[50vw]"
-                slot="item"
-                let:item
+    {#if !isMobileish}
+        <div class="items-center flex w-[{windowWidth >= 1000 ? 10 : (characterFilter ? 10 : 5)}%] min-w-[{characterFilter ? 90 : 0}px]">
+            <Select
+                items={characters}
+                --item-height="100%"
+                --item-padding="0px"
+                --padding="0px 10px 0px 5px"
+                placeholder={windowWidth >= 1000 ? "Character" : undefined}
+                bind:value={characterFilter}
             >
-                <CharacterIcon
-                    character={item.label}
-                    class="max-h-[3.5vw] min-h-[30px]"
-                />
-                <p class="pl-[1vw]">{item.label}</p>
-            </div>
-            <div
-                class="flex self-center items-center"
-                slot="selection"
-                let:selection
-            >
-                <CharacterIcon
-                    character={selection.label}
-                    class="min-h-[32px] min-w-[32px] max-h-[1.5vw]"
-                />
-                <p class="pl-[0.5vw]">{selection.label}</p>
-            </div>
-        </Select>
-    </div>
+                <span slot="prepend">
+                    {#if windowWidth >= 1150 || !characterFilter}
+                        <Filter />
+                    {/if}
+                </span>
+                <div
+                    class="flex self-center items-center min-w-[50vw]"
+                    slot="item"
+                    let:item
+                >
+                    <CharacterIcon
+                        character={item.label}
+                        class="max-h-[3.5vw] min-h-[30px]"
+                    />
+                    <p class="pl-[1vw]">{item.label}</p>
+                </div>
+                <div
+                    class="flex self-center items-center"
+                    slot="selection"
+                    let:selection
+                >
+                    <CharacterIcon
+                        character={selection.label}
+                        class="min-h-[32px] min-w-[32px] max-h-[1.5vw]"
+                    />
+                    <p class="pl-[0.5vw]">{selection.label}</p>
+                </div>
+            </Select>
+        </div>
+    {/if}
     <input
         bind:value
         on:keydown={(e) => {
@@ -98,6 +101,47 @@
         <img class="max-h-[50%]" alt="Search" src="/search.png" />
     </button>
 </div>
+
+{#if isMobileish}
+    <div class="pt-5 w-screen flex flex-row space-x-3 justify-center max-h-[5vh]">
+        <div class="items-center flex w-[25vw]">
+            <Select
+                items={characters}
+                --item-height="100%"
+                --item-padding="0px"
+                --padding="0px 10px 0px 5px"
+                placeholder="Character"
+                bind:value={characterFilter}
+            >
+                <span slot="prepend">
+                    <Filter />
+                </span>
+                <div
+                    class="flex self-center items-center min-w-[50vw]"
+                    slot="item"
+                    let:item
+                >
+                    <CharacterIcon
+                        character={item.label}
+                        class="max-h-[3.5vw] min-h-[30px]"
+                    />
+                    <p class="pl-[1vw]">{item.label}</p>
+                </div>
+                <div
+                    class="flex self-center items-center"
+                    slot="selection"
+                    let:selection
+                >
+                    <CharacterIcon
+                        character={selection.label}
+                        class="min-h-[32px] min-w-[32px] max-h-[1.5vw]"
+                    />
+                    <p class="pl-[0.5vw]">{selection.label}</p>
+                </div>
+            </Select>
+        </div>
+    </div>
+{/if}
 
 <style>
     :global(.svelte-select-list) {
