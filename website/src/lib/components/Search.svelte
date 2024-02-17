@@ -104,7 +104,7 @@
 
 {#if isMobileish}
     <div class="pt-5 w-screen flex flex-row space-x-3 justify-center max-h-[5vh]">
-        <div class="items-center flex w-[25vw]">
+        <div class="items-center flex w-[35vw]">
             <Select
                 items={characters}
                 --item-height="100%"
