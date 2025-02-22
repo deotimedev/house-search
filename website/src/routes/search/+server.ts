@@ -18,12 +18,14 @@ export async function GET(req: RequestEvent) {
     const matches = _.keyBy((await vectorize.query(embedding, {
         topK: 10,
         namespace
-    })).matches, (m) => m.vectorId)
+    })).matches, (m) => m.id)
+    console.log(`hello ${JSON.stringify(matches)}`)
     if (!matches) return Response.json("No matches found")
     const vectors = _(await vectorize.getByIds(Object.keys(matches))).orderBy((v) => matches[v.id].score, "desc").value()
     const previousQuotes = _(await vectorize.getByIds(_(vectors)
-        .map(v => v.metadata!.responseTo as string | undefined)
+        .map(v => v.metadata!.responseTo as number | undefined)
         .compact()
+        .map(String)
         .value()))
         .keyBy(v => v.id)
         .value()

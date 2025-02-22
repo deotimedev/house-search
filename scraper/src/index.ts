@@ -175,7 +175,7 @@ async function uploadVectors(path: string) {
         })
         formData.append("vectors", blob, "vectors.ndjson")
         async function request(): Promise<boolean> {
-            const response =  await fetch(`https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/vectorize/indexes/${constants.indexName}/upsert`, {
+            const response =  await fetch(`https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/vectorize/v2/indexes/${constants.indexName}/upsert`, {
                 method: "PUT",
                 headers: { Authorization: `Bearer ${process.env.CLOUDFLARE_API_KEY}` },
                 body: formData

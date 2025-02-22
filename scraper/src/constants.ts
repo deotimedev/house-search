@@ -5,7 +5,7 @@ export default {
     uploadBatchSize: 1000,
     knownEntryAmount: 79721,
     maxUploadRetry: 3,
-    indexName: "transcripts-index",
+    indexName: "transcripts-index2",
     excludedStartingLines: [
         "transcribed",
         "disclaimer",
